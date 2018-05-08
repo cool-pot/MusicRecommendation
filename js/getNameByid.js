@@ -78,7 +78,7 @@ apigClient.getUserRecommendListGet(params, body, additionalParams).then(function
 
 
 
-function BotRequest(userMessage) {
+function BotRequest(userMessage, callback) {
 
     var params = {
     };
@@ -100,8 +100,9 @@ function BotRequest(userMessage) {
 
     XJapigClient.chatbotPost(params, body, additionalParams)
         .then(function(result){
-            console.log("Successs")
-            completeRequest(result);
+            // console.log("Successs")
+            // completeRequest(result);
+            callback(null, result);
         }).catch(function(result) {
         console.log("Failure: ")
     })
@@ -123,6 +124,7 @@ function completeRequest(result) {
 $(document).ready(function(){
     $(".click-to-jump").click(function(){
         console.log($(this).attr("id"));
+        console.log(document.getElementById($(this).attr("id")).innerHTML);
         // let id = $(this).attr("id");
         // const options = {
         //     url: "",
@@ -136,7 +138,38 @@ $(document).ready(function(){
         //     }
         // }
         // $.ajax(options);
-        BotRequest("shape of you,ed sheeran")
+        var song = document.getElementById($(this).attr("id")).innerHTML;
+        var require = song + ",Guns N' Roses"
+        console.log(require)
+        BotRequest(require, (err, result) => {
+            if (err) {
+                console.log("error")
+            } else {
+                console.log(result.data.messages);
+                let data = JSON.parse(result.data.messages[0].text);
+                similarList = data[0];
+                infoList = data[1].split(',');
+                musicName= infoList[0].split('-')[0].trim()
+                singer= infoList[0].split('-')[1].trim()
+                img = infoList[1]
+                playit = infoList[2]
+                console.log(similarList);
+                console.log(musicName);
+                console.log(singer);
+                console.log(img);
+                console.log(playit);
+                document.getElementById("similarList").innerHTML = similarList;
+                document.getElementById("musicName").innerHTML = musicName;
+                document.getElementById("singer").innerHTML = singer;
+                document.getElementById("img").innerHTML = img;
+                document.getElementById("playit").innerHTML = playit;
+
+
+
+
+
+            }
+        })
     });
 });
 
