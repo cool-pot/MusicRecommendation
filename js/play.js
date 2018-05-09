@@ -109,8 +109,10 @@ var XJapigClient = XJapigClientFactory.newClient();
 
     function readFromUrl() {
         let songname = getParameterByName("songname");
+        let artist = getParameterByName("artist");
         console.log(songname);
-        var require = songname
+        console.log(artist);
+        var require = songname+","+artist
         console.log(require)
         BotRequest(require, (err, result) => {
             if (err) {
@@ -118,6 +120,32 @@ var XJapigClient = XJapigClientFactory.newClient();
             } else {
                 let data = JSON.parse(result.data.messages[0].text);
                 console.log(data);
+                similarList = data[0];
+                similarSinger1 = similarList[0].split('-')[0].trim()
+                similarName1 = similarList[0].split('-')[1].trim()
+                similarSinger2 = similarList[1].split('-')[0].trim()
+                similarName2 = similarList[1].split('-')[1].trim()
+                similarSinger3 = similarList[2].split('-')[0].trim()
+                similarName3 = similarList[2].split('-')[1].trim()
+                similarSinger4 = similarList[3].split('-')[0].trim()
+                similarName4 = similarList[3].split('-')[1].trim()
+                similarSinger5 = similarList[4].split('-')[0].trim()
+                similarName5 = similarList[4].split('-')[1].trim()
+                similarSinger6 = similarList[5].split('-')[0].trim()
+                similarName6 = similarList[5].split('-')[1].trim()
+                console.log("simlar")
+
+                infoList = data[1].split(',');
+                musicName= infoList[0].split('-')[0].trim()
+                singer= infoList[0].split('-')[1].trim()
+                img = infoList[1]
+                playit = infoList[2]
+                console.log(similarList);
+                console.log(musicName);
+                console.log(singer);
+                console.log(img);
+                console.log(playit);
+                console.log("---------------");
                 $("#marker").after("  <div class=\"apple-stuff\"><i class=\"fa fa-wifi\">\n" +
                     "    <div class=\"date\">12:00 AM</div></i><i class=\"fa fa-battery-3 battery\"></i></div>\n" +
                     "  <div class=\"picture-section\">\n" +
@@ -129,8 +157,8 @@ var XJapigClient = XJapigClientFactory.newClient();
                     "  <div class=\"slider\"></div>\n" +
                     "  <div class=\"time\"></div>\n" +
                     "  <div class=\"song-title\">\n" +
-                    "    <div class=\"artist\">" + data[0][0] + "</div>\n" +
-                    "    <div class=\"song\">Suzy Greenberg</div>\n" +
+                    "    <div class=\"artist\">" + singer + "</div>\n" +
+                    "    <div class=\"song\">"+ musicName +"</div>\n" +
                     "  </div>\n" +
                     "  <div class=\"playlist-controls\">\n" +
                     "    <div class=\"circle\"></div>\n" +
@@ -144,22 +172,22 @@ var XJapigClient = XJapigClientFactory.newClient();
                     "    <table>\n" +
                     "      <tr id=\"billy\" data-title=\"billyBreathes\">\n" +
                     "        <td class=\"num\">1</td>\n" +
-                    "        <td class=\"title\" ><a href='play.html?songname=blabla' style='color: white'>Billy Breathes</a></td>\n" +
+                    "        <td class=\"title\" ><a href='play.html?songname="+ similarName1 +"&artist="+ similarSinger1+" ' style='color: white'>"+ similarList[0] +"</a></td>\n" +
                     "        <td class=\"length\">3:00</td>\n" +
                     "      </tr>\n" +
                     "      <tr id=\"hood\" data-title=\"harryHood\">\n" +
                     "        <td class=\"num\">2</td>\n" +
-                    "        <td class=\"title\">Harry Hood</td>\n" +
+                    "        <td class=\"title\"><a href='play.html?songname="+ similarName2 +"&artist="+ similarSinger2+" ' style='color: white'>"+ similarList[1] +"</a></td>\n" +
                     "        <td class=\"length\">2:54</td>\n" +
                     "      </tr>\n" +
                     "      <tr id=\"suzy\" data-title=\"suzyGreenberg\">\n" +
                     "        <td class=\"num\">3</td>\n" +
-                    "        <td class=\"title\">Suzy Greenberg</td>\n" +
+                    "        <td class=\"title\"><a href='play.html?songname="+ similarName3 +"&artist="+ similarSinger3+" ' style='color: white'>"+ similarList[2] +"</a></td>\n" +
                     "        <td class=\"length\">2:54</td>\n" +
                     "      </tr>\n" +
                     "      <tr id=\"divided\" data-title=\"themeFromTheBottom\">\n" +
                     "        <td class=\"num\">4</td>\n" +
-                    "        <td class=\"title\">Theme From The Bottom</td>\n" +
+                    "        <td class=\"title\"><a href='play.html?songname="+ similarName4 +"&artist="+ similarSinger4+" ' style='color: white'>"+ similarList[3] +"</a></td>\n" +
                     "        <td class=\"length\">2:54</td>\n" +
                     "      </tr>\n" +
                     "    </table>\n" +
