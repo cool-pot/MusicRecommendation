@@ -120,7 +120,6 @@ function completeRequest(result) {
 
 }
 // BotRequest("shape of you,ed sheeran")
-
 $(document).ready(function(){
     $(".click-to-jump").click(function(){
         console.log($(this).attr("id"));
@@ -158,19 +157,11 @@ $(document).ready(function(){
                 console.log(singer);
                 console.log(img);
                 console.log(playit);
-                document.getElementById("similarList").innerHTML = similarList;
-                document.getElementById("musicName").innerHTML = musicName;
-                document.getElementById("singer").innerHTML = singer;
-                document.getElementById("img").innerHTML = img;
-                document.getElementById("playit").innerHTML = playit;
-
-
-
-
+                console.log("---------------");
+                window.open("play.html?songname="+require);
 
             }
         })
     });
 });
-
 
