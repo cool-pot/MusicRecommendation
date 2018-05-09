@@ -197,5 +197,14 @@ $(document).ready(function(){
         //     }
         // })
     });
+
+
+    $("#search-button").click((e) => {
+        e.preventDefault();
+        term = $("#search-result").val();
+        console.log("term:");
+        console.log(term);
+        window.open("search.html?searchterm="+term);
+    })
 });
 
