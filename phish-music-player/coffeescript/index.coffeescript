@@ -1,0 +1,146 @@
+#variables
+themeFromTheBottom = new Howl(urls: ['https://s3-us-west-2.amazonaws.com/s.cdpn.io/377560/07_Theme_from_the_Bottom_(1).mp3'], volume: window.volume)
+
+billyBreathes = new Howl(urls: ['https://s3-us-west-2.amazonaws.com/s.cdpn.io/377560/10_Billy_Breathes_(1)_(1).mp3'], volume: window.volume)
+
+harryHood = new Howl(urls: ['https://s3-us-west-2.amazonaws.com/s.cdpn.io/377560/harry-hood-small.mp3'], volume: window.volume)
+
+suzyGreenberg = new Howl(urls: ['https://s3-us-west-2.amazonaws.com/s.cdpn.io/377560/suzy_greenberg_small.mp3'], volume: window.volume)
+
+window.open = true
+window.volume = 0.5
+window.position = 0
+window.duration = 40.8
+playlist = [suzyGreenberg]
+window.currentSong = playlist[0]
+window.add = null
+
+
+
+
+changeSong = (song) ->
+  console.log(song)
+  window.currentSong.stop()
+  window.currentSong.pos(0)
+  window.position = 0
+  $(".slider").slider("value", 0) 
+  window.currentSong = song
+  $(".play-song > i").removeClass('fa-play')
+  $(".play-song > i").addClass('fa-pause')
+  window.open = false
+  song.play()
+
+updatePositionSlider = () -> 
+  window.position += 1
+
+playSong = (song) ->
+  song.play()
+  window.add = setInterval(updatePositionSlider, 1000)
+  
+
+pauseSong = (song) ->
+  song.pause()
+  clearInterval(window.add)
+
+changeVolume = (song) ->
+  song.volume(window.volume)
+
+changePosition = (song) ->
+  song.pos(window.position)
+
+updateSlider = () ->
+  $(".slider").slider("value", window.position) 
+
+  
+
+    
+
+
+$ ->
+  
+  $(".slider").slider({
+    min: 0
+    range: "min"
+    max: window.duration
+    value: 0
+    slide: (event, ui) ->
+      window.position = ui.value
+      console.log ui.value
+      changePosition(window.currentSong)
+    })
+  setInterval(updateSlider, 1000)
+  
+  $("#volume-off").click ->
+    currentSong.volume(0)
+    $(".slider-volume").slider("value", 0)
+  
+  $("#volume-up").click ->
+    currentSong.volume(1)
+    $(".slider-volume").slider("value", 100)
+    
+     
+  
+  
+  $(".slider-volume").slider({
+    min: 0
+    range: "min"
+    max: 100
+    value: 50
+    slide: (event, ui) ->
+      console.log "hey"
+      window.volume = (ui.value) / 100
+      changeVolume(window.currentSong)
+      
+    })
+  
+  $("#play").click ->
+    if window.open
+      playSong(window.currentSong)
+      $(".play-song > i").removeClass('fa-play')
+      $(".play-song > i").addClass('fa-pause')
+      window.open = !window.open 
+    else
+      pauseSong(window.currentSong)
+      $(".play-song > i").removeClass('fa-pause')
+      $(".play-song > i").addClass('fa-play')
+      window.open = !window.open
+  slideUp = true
+  
+  $(".slide-up").click ->
+    if slideUp
+      $(".song-list, .playlist-controls, .overlay").addClass("active")
+      $(".slide-up").html("<i class='fa fa-chevron-down'></i>")
+      slideUp = !slideUp
+    else
+      $(".song-list, .playlist-controls, .overlay").removeClass("active")
+      $(".slide-up").html("<i class='fa fa-chevron-up'></i>")
+      slideUp = !slideUp
+  
+  $("tr").click ->
+    if $(@).attr('data-title') is "billyBreathes"
+      changeSong(billyBreathes)
+      $(".slider").slider("option","max", 331.6) 
+      window.duration = 331.6
+      $(".song").html("Billy Breathes")
+    else if $(@).attr('data-title') is "harryHood"
+      $(".song").html("Harry Hood")
+      window.duration = 40.8
+      $(".slider").slider("option","max", 40.8) 
+      changeSong(harryHood)
+    else if $(@).attr('data-title') is "suzyGreenberg"
+      $(".song").html("Suzy Greenberg")
+      window.duration = 40.8
+      $(".slider").slider("option","max", 40.8)
+      changeSong(suzyGreenberg)
+    else if $(@).attr('data-title') is "themeFromTheBottom"
+      changeSong(themeFromTheBottom)
+      $(".song").html("Theme From The Bottom")
+      $(".slider").slider("option", "max", 382.2)
+      window.duration = 382.2
+    
+    $(".song-list, .playlist-controls, .overlay").removeClass("active")
+    $(".slide-up").html("<i class='fa fa-chevron-up'></i>")
+    slideUp = !slideUp
+  
+    
+      
