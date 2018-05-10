@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Logging</title>
+</head>
+<script type="text/javascript" src="lib/axios/dist/axios.standalone.js"></script>
+<script type="text/javascript" src="lib/CryptoJS/rollups/hmac-sha256.js"></script>
+<script type="text/javascript" src="lib/CryptoJS/rollups/sha256.js"></script>
+<script type="text/javascript" src="lib/CryptoJS/components/hmac.js"></script>
+<script type="text/javascript" src="lib/CryptoJS/components/enc-base64.js"></script>
+<script type="text/javascript" src="lib/url-template/url-template.js"></script>
+<script type="text/javascript" src="lib/apiGatewayCore/sigV4Client.js"></script>
+<script type="text/javascript" src="lib/apiGatewayCore/apiGatewayClient.js"></script>
+<script type="text/javascript" src="lib/apiGatewayCore/simpleHttpClient.js"></script>
+<script type="text/javascript" src="lib/apiGatewayCore/utils.js"></script>
+<script type="text/javascript" src="apigClient.js"></script>
+<script type="text/javascript" src="https://sdk.amazonaws.com/js/aws-sdk-2.2.32.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="credential.js"></script>
+<script type="text/javascript" src="sample.js"></script>
+
+<body bgcolor="black">
+<h1 align="center"><font color="red">Logging...</font></h1>
+<hr />
+
+
+<script type="text/javascript">
+function get_user_id(){
+  identityId = AWS.config.credentials.identityId
+  additionalParams={}
+  body = {}
+  params = {"identityId": identityId }
+  apigClient.getUserIdGet(params, body, additionalParams).then(function(result){
+        console.log("------------------------------------------------------------------------------------")
+        console.log("Succeed : getUserIdGet")
+        console.log(result)
+        user_id = result['data']
+        window.location.href = 'http://www.baidu.com/index.html?user_id=' + user_id
+        return user_id
+      }).catch(function(result){
+        console.log("Error : getUserIdGet")
+        console.log(result)
+  })
+}
+setTimeout("user_id=get_user_id()",3000);
+</script>>
+
+
+</body>
+
+</html>
