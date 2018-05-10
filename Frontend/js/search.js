@@ -69,7 +69,7 @@ apigClient.generalSearchGet(params, body, additionalParams).then(function(result
         console.log(songs);
         songs.forEach(song => {
             $("#append-marker").before("<div class=\"col-md-3 content-grid last-grid\">\n" +
-                "                        <a class=\"play-icon popup-with-zoom-anim\" href=\"#small-dialog\"><img class=\"click-to-jump\" id=\""+song.song + "-" + song.artist+"\"src=\""+ song.imageUrl + "\" title=\"allbum-name\"></a>\n" +
+                "                        <a class=\"play-icon popup-with-zoom-anim\" href=\"#small-dialog\"><img class=\"click-to-jump\" id=\""+song.song + "-" + song.artist+"\"src=\""+ song.imageUrl + "\" title=\""+ song.song +"\"></a>\n" +
                 "                        <a class=\"button play-icon popup-with-zoom-anim\" href=\"#small-dialog\"><p></p></a>\n" +
                 "                    </div>")
         })
