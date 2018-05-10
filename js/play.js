@@ -4,21 +4,6 @@ var XJapigClient = XJapigClientFactory.newClient();
     var billyBreathes, changePosition, changeSong, changeVolume, harryHood, pauseSong, playSong, playlist,
         suzyGreenberg, themeFromTheBottom, updatePositionSlider, updateSlider;
 
-    themeFromTheBottom = new Howl({
-        urls: ['https://s3-us-west-2.amazonaws.com/s.cdpn.io/377560/07_Theme_from_the_Bottom_(1).mp3'],
-        volume: window.volume
-    });
-
-    billyBreathes = new Howl({
-        urls: ['https://s3-us-west-2.amazonaws.com/s.cdpn.io/377560/10_Billy_Breathes_(1)_(1).mp3'],
-        volume: window.volume
-    });
-
-    harryHood = new Howl({
-        urls: ['https://s3-us-west-2.amazonaws.com/s.cdpn.io/377560/harry-hood-small.mp3'],
-        volume: window.volume
-    });
-
     suzyGreenberg = new Howl({
         urls: ['https://s3-us-west-2.amazonaws.com/s.cdpn.io/377560/suzy_greenberg_small.mp3'],
         volume: window.volume
@@ -146,12 +131,30 @@ var XJapigClient = XJapigClientFactory.newClient();
                 console.log(img);
                 console.log(playit);
                 console.log("---------------");
-                $("#marker").after("  <div class=\"apple-stuff\"><i class=\"fa fa-wifi\">\n" +
-                    "    <div class=\"date\">12:00 AM</div></i><i class=\"fa fa-battery-3 battery\"></i></div>\n" +
+
+                let appenedUrl = playit + ".mp3";
+                console.log(appenedUrl);
+                window.currentSong = new Howl({
+                    urls: [appenedUrl],
+                    volume: window.volume
+                });
+
+                $("#marker").after("<div style=\"display: none\">\n" +
+                    "    <audio class=\"audioDemo\" controls preload=\"none\">\n" +
+                    "      <source src=\" " + playit + "\" type=\"audio/mp3\">\n" +
+                    "    </audio>\n" +
+                    "  </div>")
+            $(".audioDemo").trigger('load');
+
+        //starts playing
+
+                $("#marker").after("  <div class=\"apple-stuff\"></div>\n" +
                     "  <div class=\"picture-section\">\n" +
                     "    <h3>Now Playing</h3>\n" +
-                    "    <div class=\"band\">\n" +
+
+                    "    <div class=\"band band-background\"  >\n" +
                     "      <div class=\"overlay\"></div>\n" +
+
                     "    </div>\n" +
                     "  </div>\n" +
                     "  <div class=\"slider\"></div>\n" +
@@ -161,7 +164,7 @@ var XJapigClient = XJapigClientFactory.newClient();
                     "    <div class=\"song\">"+ musicName +"</div>\n" +
                     "  </div>\n" +
                     "  <div class=\"playlist-controls\">\n" +
-                    "    <div class=\"circle\"></div>\n" +
+
                     "    <div class=\"play-song\"><i class=\"fa fa-play\" id=\"play\"></i></div>\n" +
                     "  </div>\n" +
                     "  <div class=\"song-list\">\n" +
@@ -198,11 +201,9 @@ var XJapigClient = XJapigClientFactory.newClient();
                     "  \n" +
                     "  \n" +
                     "  \n" +
-                    "  <div class=\"volume\"><i class=\"fa fa-volume-off\" id=\"volume-off\"></i><i class=\"fa fa-volume-up\" id=\"volume-up\"></i>\n" +
-                    "    <div class=\"slider-volume\"></div>\n" +
-                    "  </div>\n" +
                     "  <div class=\"slide-up\"><i class=\"fa fa-chevron-up\"></i></div>");
 
+            $(".band-background").css("background-image", 'url(' + img + ')');
 
                 updateSlider();
             }
@@ -226,15 +227,15 @@ var XJapigClient = XJapigClientFactory.newClient();
 
     $(document).delegate('#play', 'click', function()
     {
-        //your code
-        console.log("yo");
+        // console.log("yo");
         if (window.open) {
-            playSong(window.currentSong);
+            $(".audioDemo").trigger('play');
+
             $(".play-song > i").removeClass('fa-play');
             $(".play-song > i").addClass('fa-pause');
             return window.open = !window.open;
         } else {
-            pauseSong(window.currentSong);
+            $(".audioDemo").trigger('pause');
             $(".play-song > i").removeClass('fa-pause');
             $(".play-song > i").addClass('fa-play');
             return window.open = !window.open;
@@ -259,19 +260,6 @@ var XJapigClient = XJapigClientFactory.newClient();
             }
         };
     })
-    // $(".slider").slider({
-    //     min: 0,
-    //     range: "min",
-    //     max: window.duration,
-    //     value: 0,
-    //     slide: function(event, ui) {
-    //         window.position = ui.value;
-    //         console.log(ui.value);
-    //         return changePosition(window.currentSong);
-    //     }
-    // });
-
-
 
     $("#volume-off").click(function () {
         currentSong.volume(0);
