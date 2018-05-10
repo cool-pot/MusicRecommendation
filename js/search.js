@@ -1,4 +1,6 @@
 var apigClient = apigClientFactory.newClient();
+var XJapigClient = XJapigClientFactory.newClient();
+
 var data, search1, searchSinger1, searchName1, search2, searchSinger2, searchName2, search3, searchSinger3, searchName3, search4, searchSinger4, searchName4
 var search5, searchSinger5, searchName5, search6, searchSinger6, searchName6, search7, searchSinger7, searchName7, search8, searchSinger8, searchName8
 var artist1, artist2, artist3, artist4, artist5, artist6, artist7, artist8
@@ -11,6 +13,34 @@ function getParameterByName(name, url) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
+function BotRequest(userMessage, callback) {
+
+    var params = {};
+
+    var body = {
+        "messages": [
+            {
+                "type": "string",
+                "unstructured": {
+                    "id": "123",
+                    "text": userMessage,
+                    "timestamp": new Date().getTime()
+                }
+            }
+        ]
+    };
+
+    var additionalParams = {};
+
+    XJapigClient.chatbotPost(params, body, additionalParams)
+        .then(function (result) {
+            // console.log("Successs")
+            // completeRequest(result);
+            callback(null, result);
+        }).catch(function (result) {
+    })
+}
+
 let term = getParameterByName("searchterm");
 // let term = "Taylor Swift"
 let additionalParams={}
@@ -19,40 +49,71 @@ let params = {"term": term }
 apigClient.generalSearchGet(params, body, additionalParams).then(function(result){
     console.log("------------------------------------------------------------------------------------")
     console.log("Succeed : generalSearchGet")
-    data = result["data"]["hits"]["hits"]
-    search1 = data[0]
-    searchSinger1 = search1["_source"]["artist"]
-    searchName1  = search1["_source"]["title"]
-    search2 = data[1]
-    searchSinger2 = search2["_source"]["artist"]
-    searchName2  = search2["_source"]["title"]
-    search3 = data[2]
-    searchSinger3 = search3["_source"]["artist"]
-    searchName3  = search3["_source"]["title"]
-    search4 = data[3]
-    searchSinger4 = search4["_source"]["artist"]
-    searchName4  = search4["_source"]["title"]
-    search5 = data[4]
-    searchSinger5 = search5["_source"]["artist"]
-    searchName5  = search5["_source"]["title"]
-    search6 = data[5]
-    searchSinger6 = search6["_source"]["artist"]
-    searchName6  = search6["_source"]["title"]
-    search7 = data[6]
-    searchSinger7 = search7["_source"]["artist"]
-    searchName7  = search7["_source"]["title"]
-    search8 = data[7]
-    searchSinger8 = search8["_source"]["artist"]
-    searchName8  = search8["_source"]["title"]
+    data = result["data"]["hits"]["hits"];
+    console.log("mark0");
+    console.log(data);
+    let searchList = [];
+    data.forEach(item => {
+        let artist = item["_source"].artist;
+        let title = item["_source"].title;
+        searchList.push({
+            artist: artist,
+            title: title
+        });
+    })
 
-    document.getElementById("searchName1").innerHTML = searchName1;
-    document.getElementById("searchName2").innerHTML = searchName2;
-    document.getElementById("searchName3").innerHTML = searchName3;
-    document.getElementById("searchName4").innerHTML = searchName4;
-    document.getElementById("searchName5").innerHTML = searchName5;
-    document.getElementById("searchName6").innerHTML = searchName6;
-    document.getElementById("searchName7").innerHTML = searchName7;
-    document.getElementById("searchName8").innerHTML = searchName8;
+    // for (let i = 1; i <= 4; i++) {
+    //     document.getElementById("searchName"+i).innerHTML = searchList[i-1].title;
+    // }
+    console.log("searchlist:")
+    console.log(searchList);
+    // var require1 = searchList[1].title + "," + searchList[1].artist;
+    let counter = 1;
+    let songs = [];
+    getSongs(searchList).then(songs => {
+        console.log(songs);
+        songs.forEach(song => {
+            $("#append-marker").before("<div class=\"col-md-3 content-grid last-grid\">\n" +
+                "                        <a class=\"play-icon popup-with-zoom-anim\" href=\"#small-dialog\"><img class=\"click-to-jump\" id=\""+song.song + "-" + song.artist+"\"src=\""+ song.imageUrl + "\" title=\"allbum-name\"></a>\n" +
+                "                        <a class=\"button play-icon popup-with-zoom-anim\" href=\"#small-dialog\"><p></p></a>\n" +
+                "                    </div>")
+        })
+    })
+
+
+    function getSongs(searchList) {
+        let counter = 0;
+        searchList = searchList.slice(0, 4);
+        return new Promise((resolve, reject) => {
+            searchList.forEach(search => {
+                if (counter >= 4) return;
+                let params = search.title + "," + search.artist;
+                BotRequest(params, (err, result) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        let data = JSON.parse(result.data.messages[0].text);
+                        console.log(data);
+                        let similarList = data[0];
+                        let infoList = data[1].split(",");
+                        let song = infoList[0].split("-")[0].trim();
+                        let artist = infoList[0].split("-")[1].trim();
+                        let info = {
+                            song: song,
+                            artist: artist,
+                            imageUrl: infoList[1],
+                            playUrl: infoList[2]
+                        };
+                        songs.push(info);
+                    }
+                    counter++;
+                    if (counter === 4) {
+                        resolve(songs);
+                    }
+                })
+            })
+        })
+    }
 
 
 }).catch(function(result){
@@ -64,37 +125,13 @@ apigClient.generalSearchGet(params, body, additionalParams).then(function(result
 var artist
 // BotRequest("shape of you,ed sheeran")
 $(document).ready(function(){
-    $(".click-to-jump").click(function(){
-        if ($(this).attr("id") === "searchName1"){
-            artist = searchSinger1
-        }
-        if ($(this).attr("id") === "searchName2"){
-            artist = searchSinger2
-        }
-        if ($(this).attr("id") === "searchName3"){
-            artist = searchSinger3
-        }
-        if ($(this).attr("id") === "searchName4"){
-            artist = searchSinger4
-        }
-        if ($(this).attr("id") === "searchName5"){
-            artist = searchSinger5
-        }
-        if ($(this).attr("id") === "searchName6"){
-            artist = searchSinger6
-        }
-        if ($(this).attr("id") === "searchName7"){
-            artist = searchSinger7
-        }
-        if ($(this).attr("id") === "searchName8"){
-            artist = searchSinger8
-        }
-        // console.log(document.getElementById($(this).attr("id")).innerHTML);
-
-        var song = document.getElementById($(this).attr("id")).innerHTML;
+    $(document).delegate('.click-to-jump', 'click', function() {
+        let id = $(this).attr("id");
+        let song = id.split("-")[0].trim();
+        let artist = id.split("-")[1].trim();
         window.location.assign("play.html?songname="+ song +"&artist="+ artist)
 
-    });
+    })
 
 });
 
