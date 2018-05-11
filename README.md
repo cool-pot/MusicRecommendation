@@ -4,4 +4,4 @@ A Large Scale Music Recommender Web App leveraging AWS services.
 
 ## Architecture
 
-![](./Pic/CCARCH.png)
+![](./Pic/cloud.jpg)
