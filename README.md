@@ -2,13 +2,14 @@
 
 A Large Scale Music Recommender Web App leveraging AWS services.
 
-## Demo
-
-Youtube: https://youtu.be/l2Efp4UBPSU
-
 ## Architecture
 
 ![](./Pic/cloud.jpg)
+
+## Demo
+![](./Pic/music_recommender.gif)
+
+Youtube: https://youtu.be/l2Efp4UBPSU
 
 ## Statistics
 
