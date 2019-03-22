@@ -1,6 +1,6 @@
 # Large Scale Recommend Music Web App
 
-A Large Scale Music Recommender Web App leveraging AWS services.
+A Large Scale Music Recommender Web App leveraging AWS services. See our [report](https://github.com/cool-pot/MusicRecommendation/blob/master/MusicRecommendReport.pdf).
 
 ## Architecture
 
